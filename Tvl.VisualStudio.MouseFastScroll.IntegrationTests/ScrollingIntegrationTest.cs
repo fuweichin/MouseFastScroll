@@ -101,9 +101,9 @@ namespace Tvl.VisualStudio.MouseFastScroll.IntegrationTests
             await SendKeys.SendAsync(inputSimulator =>
             {
                 inputSimulator
-                    .Keyboard.KeyDown(VirtualKeyCode.CONTROL)
+                    .Keyboard.KeyDown(VirtualKeyCode.RMENU)
                     .Mouse.VerticalScroll(-1)
-                    .Keyboard.Sleep(10).KeyUp(VirtualKeyCode.CONTROL);
+                    .Keyboard.Sleep(10).KeyUp(VirtualKeyCode.RMENU);
             });
 
             int expectedLastVisibleLine = lastVisibleLine + (lastVisibleLineState == VisibilityState.FullyVisible ? 1 : 0);
@@ -114,9 +114,9 @@ namespace Tvl.VisualStudio.MouseFastScroll.IntegrationTests
             await SendKeys.SendAsync(inputSimulator =>
             {
                 inputSimulator
-                    .Keyboard.KeyDown(VirtualKeyCode.CONTROL)
+                    .Keyboard.KeyDown(VirtualKeyCode.RMENU)
                     .Mouse.VerticalScroll(1)
-                    .Keyboard.Sleep(10).KeyUp(VirtualKeyCode.CONTROL);
+                    .Keyboard.Sleep(10).KeyUp(VirtualKeyCode.RMENU);
             });
 
             Assert.Equal(0, await Editor.GetCaretPositionAsync());

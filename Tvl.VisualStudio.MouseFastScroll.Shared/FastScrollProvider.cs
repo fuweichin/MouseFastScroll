@@ -21,7 +21,6 @@ namespace Tvl.VisualStudio.MouseFastScroll
                 return null;
             }
 
-            wpfTextView.Options.SetOptionValue(DefaultWpfViewOptions.EnableMouseWheelZoomId, false);
             return new FastScrollProcessor(wpfTextView);
         }
     }

@@ -27,16 +27,5 @@ namespace Tvl.VisualStudio.MouseFastScroll.UnitTests
             Assert.NotNull(processor);
         }
 
-        [Fact]
-        public void DisablesZoom()
-        {
-            var provider = CompositionHelper.GetProvider(out var exportProvider);
-            var wpfTextView = new FakeWpfTextView(exportProvider, new FakeTextSnapshot(string.Empty));
-
-            Assert.True(wpfTextView.Options.GetOptionValue(DefaultWpfViewOptions.EnableMouseWheelZoomId));
-
-            var processor = provider.GetAssociatedProcessor(wpfTextView);
-            Assert.False(wpfTextView.Options.GetOptionValue(DefaultWpfViewOptions.EnableMouseWheelZoomId));
-        }
     }
 }

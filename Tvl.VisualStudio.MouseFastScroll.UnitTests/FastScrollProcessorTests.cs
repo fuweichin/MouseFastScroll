@@ -5,6 +5,7 @@ namespace Tvl.VisualStudio.MouseFastScroll.UnitTests
 {
     using System;
     using System.Linq;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Input;
     using Microsoft.VisualStudio.Text.Editor;
@@ -14,14 +15,16 @@ namespace Tvl.VisualStudio.MouseFastScroll.UnitTests
 
     public class FastScrollProcessorTests
     {
+        private InputSimulator inputSimulator = new InputSimulator();
+
         [StaFact]
-        public void ScrollWithoutControlPressed()
+        public void ScrollWithoutAltPressed()
         {
             string content = string.Join("\r\n", Enumerable.Range(0, 200).Select(i => Guid.NewGuid().ToString()));
             var processor = CompositionHelper.GetProcessor(content, out var exportProvider, out var wpfTextView);
             var args = new MouseWheelEventArgs(Mouse.PrimaryDevice, Environment.TickCount, 120);
 
-            Assert.Equal(ModifierKeys.None, Keyboard.Modifiers & ModifierKeys.Control);
+            Assert.Equal(ModifierKeys.None, Keyboard.Modifiers & ModifierKeys.Alt);
             Assert.False(args.Handled);
             var firstVisibleLine = wpfTextView.TextViewLines.FirstVisibleLine.Start.GetContainingLine().LineNumber;
             processor.PreprocessMouseWheel(args);
@@ -32,17 +35,17 @@ namespace Tvl.VisualStudio.MouseFastScroll.UnitTests
         }
 
         [StaFact]
-        public void ScrollDownWithControlPressed()
+        public void ScrollDownWithAltPressed()
         {
             string content = string.Join("\r\n", Enumerable.Range(0, 200).Select(i => Guid.NewGuid().ToString()));
             var processor = CompositionHelper.GetProcessor(content, out var exportProvider, out var wpfTextView);
             var args = new MouseWheelEventArgs(Mouse.PrimaryDevice, Environment.TickCount, -120) { RoutedEvent = UIElement.MouseWheelEvent };
 
-            var inputSimulator = new InputSimulator();
-            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.RMENU);
+            Thread.Sleep(8);
             try
             {
-                Assert.Equal(ModifierKeys.Control, Keyboard.Modifiers & ModifierKeys.Control);
+                Assert.Equal(ModifierKeys.Alt, Keyboard.Modifiers & ModifierKeys.Alt);
                 Assert.False(args.Handled);
                 var lastVisibleLine = wpfTextView.TextViewLines.LastVisibleLine.Start.GetContainingLine().LineNumber;
                 processor.PreprocessMouseWheel(args);
@@ -53,22 +56,22 @@ namespace Tvl.VisualStudio.MouseFastScroll.UnitTests
             }
             finally
             {
-                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.RMENU);
             }
         }
 
         [StaFact]
-        public void ScrollUpPartialPageWithControlPressed()
+        public void ScrollUpPartialPageWithAltPressed()
         {
             string content = string.Join("\r\n", Enumerable.Range(0, 200).Select(i => Guid.NewGuid().ToString()));
             var processor = CompositionHelper.GetProcessor(content, out var exportProvider, out var wpfTextView);
             var args = new MouseWheelEventArgs(Mouse.PrimaryDevice, Environment.TickCount, 120) { RoutedEvent = UIElement.MouseWheelEvent };
 
-            var inputSimulator = new InputSimulator();
-            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.RMENU);
+            Thread.Sleep(8);
             try
             {
-                Assert.Equal(ModifierKeys.Control, Keyboard.Modifiers & ModifierKeys.Control);
+                Assert.Equal(ModifierKeys.Alt, Keyboard.Modifiers & ModifierKeys.Alt);
                 Assert.False(args.Handled);
                 var lastVisibleLine = wpfTextView.TextViewLines.LastVisibleLine.Start.GetContainingLine().LineNumber;
                 wpfTextView.TextViewLines.Scroll(ScrollDirection.Down, lastVisibleLine / 2);
@@ -80,22 +83,22 @@ namespace Tvl.VisualStudio.MouseFastScroll.UnitTests
             }
             finally
             {
-                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.RMENU);
             }
         }
 
         [StaFact]
-        public void ScrollUpFullPageWithControlPressed()
+        public void ScrollUpFullPageWithAltPressed()
         {
             string content = string.Join("\r\n", Enumerable.Range(0, 200).Select(i => Guid.NewGuid().ToString()));
             var processor = CompositionHelper.GetProcessor(content, out var exportProvider, out var wpfTextView);
             var args = new MouseWheelEventArgs(Mouse.PrimaryDevice, Environment.TickCount, 120) { RoutedEvent = UIElement.MouseWheelEvent };
 
-            var inputSimulator = new InputSimulator();
-            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.CONTROL);
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.RMENU);
+            Thread.Sleep(8);
             try
             {
-                Assert.Equal(ModifierKeys.Control, Keyboard.Modifiers & ModifierKeys.Control);
+                Assert.Equal(ModifierKeys.Alt, Keyboard.Modifiers & ModifierKeys.Alt);
                 Assert.False(args.Handled);
                 var lastVisibleLine = wpfTextView.TextViewLines.LastVisibleLine.Start.GetContainingLine().LineNumber;
                 wpfTextView.TextViewLines.Scroll(ScrollDirection.Down, lastVisibleLine + 4);
@@ -106,7 +109,7 @@ namespace Tvl.VisualStudio.MouseFastScroll.UnitTests
             }
             finally
             {
-                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.CONTROL);
+                inputSimulator.Keyboard.KeyUp(VirtualKeyCode.RMENU);
             }
         }
     }
